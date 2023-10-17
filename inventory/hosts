@@ -1,0 +1,13 @@
+[apps]
+app-0 ansible_host=
+app-1 ansible_host=
+app-2 ansible_host=
+
+[monitoring]
+prometheus ansible_host=
+grafana ansible_host=
+
+[all:vars]
+ansible_ssh_user=chalvinwz
+ansible_ssh_private_key_file=~/.ssh/labs
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'

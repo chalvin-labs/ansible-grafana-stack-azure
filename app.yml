@@ -1,0 +1,5 @@
+- name: provision for app server
+  hosts: apps
+  become: yes
+  roles:
+    - node-exporter

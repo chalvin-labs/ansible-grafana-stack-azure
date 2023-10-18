@@ -1,0 +1,78 @@
+---
+- name: Check if Docker is installed
+  command: docker --version
+  ignore_errors: true
+  register: docker_check
+
+- name: Ensure dependencies are installed.
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+  when: docker_check.failed
+
+- name: Import Docker GPG key
+  apt_key:
+    url: '{{ docker_apt_gpg_key }}'
+  when: docker_check.failed
+
+- name: Add Docker repository
+  apt_repository:
+    repo: '{{ docker_apt_repository }}'
+    state: present
+    update_cache: yes
+  when: docker_check.failed
+
+- name: Install Docker
+  apt:
+    name: docker-ce
+    state: present
+  when: docker_check.failed
+
+- name: Ensure Docker is started and enabled at boot
+  service:
+    name: docker
+    state: '{{ docker_service_state }}'
+    enabled: '{{ docker_service_enabled }}'
+  when: docker_check.failed
+
+- name: Check if docker-compose is installed
+  command: '{{ docker_compose_path }} --version'
+  register: docker_compose_vsn
+  check_mode: false
+  changed_when: false
+  failed_when: false
+
+- set_fact:
+    docker_compose_current_version: "{{ docker_compose_vsn.stdout | regex_search('(\\d+(\\.\\d+)+)') }}"
+  when: >
+    docker_compose_vsn.stdout is defined
+    and (docker_compose_vsn.stdout | length > 0)
+
+- name: Delete existing docker-compose version if it's different.
+  file:
+    path: '{{ docker_compose_path }}'
+    state: absent
+  when: >
+    docker_compose_current_version is defined
+    and (docker_compose_version | regex_replace('v', '')) not in docker_compose_current_version
+
+- name: Install Docker Compose.
+  get_url:
+    url: '{{ docker_compose_url }}'
+    dest: '{{ docker_compose_path }}'
+    mode: +x
+  when: >
+    (docker_compose_current_version is not defined)
+    or (docker_compose_current_version | length == 0)
+    or (docker_compose_current_version is version((docker_compose_version | regex_replace('v', '')), '<'))
+
+- name: Add current user to the docker group
+  user:
+    name: '{{ ansible_user }}'
+    groups: docker
+  when: docker_check.failed

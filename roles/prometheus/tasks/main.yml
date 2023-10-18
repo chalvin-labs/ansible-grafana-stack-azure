@@ -3,10 +3,6 @@
   stat: 'path=/usr/local/bin/prometheus'
   register: prometheus_bin
 
-# - name: Check if alertmanager is installed.
-#   stat: 'path=/usr/local/bin/alertmanager'
-#   register: alertmanager_bin
-
 - name: Unarchive prometheus x64
   become: true
   unarchive:
@@ -65,7 +61,6 @@
     state: restarted
     name: prometheus
     enabled: yes
-  # when: alertmanager_bin.stat.exists
 
 - name: Check if prometheus is accessible
   uri:

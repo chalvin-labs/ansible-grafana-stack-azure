@@ -3,9 +3,13 @@ app-0 ansible_host=
 app-1 ansible_host=
 app-2 ansible_host=
 
+[load_balancer]
+app-lb ansible_host=
+
 [monitoring]
 prometheus ansible_host=
 grafana ansible_host=
+loki ansible_host=
 
 [all:vars]
 ansible_ssh_user=chalvinwz

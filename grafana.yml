@@ -1,5 +1,5 @@
 ---
-- name: provision for grafana server
+- name: Configuration for grafana server
   hosts: grafana
   become: yes
   roles:

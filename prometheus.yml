@@ -1,5 +1,5 @@
 ---
-- name: provision prometheus server
+- name: Configuration for prometheus server
   hosts: prometheus
   become: yes
   roles:

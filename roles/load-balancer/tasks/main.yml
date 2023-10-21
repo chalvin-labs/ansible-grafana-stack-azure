@@ -1,0 +1,20 @@
+---
+# tasks file for roles/load-balancer
+- name: Update APT cache
+  apt:
+    update_cache: yes
+
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Copy nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Restart Nginx service
+  service:
+    name: nginx
+    state: restarted

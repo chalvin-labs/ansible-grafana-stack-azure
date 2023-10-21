@@ -1,2 +1,19 @@
 ---
-# tasks file for roles/deploy-app
+- name: Install docker python package
+  ansible.builtin.pip:
+    name: docker
+  state: present
+
+- name: Pull an image
+  community.docker.docker_image:
+    name: chalvinwz/backend
+    source: pull
+  state: present
+
+- name: Restart a container
+  community.docker.docker_container:
+    name: backend
+    image: chalvinwz/backend
+    state: started
+    ports:
+      - '3000:3000'

@@ -1,0 +1,6 @@
+---
+- name: Configuration for load balancer server
+  hosts: load_balancer
+  become: yes
+  roles:
+    - load-balancer

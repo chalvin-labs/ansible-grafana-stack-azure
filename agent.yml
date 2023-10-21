@@ -1,0 +1,7 @@
+---
+- name: Install node-exporter and promtail in all servers
+  hosts: all
+  become: yes
+  roles:
+    - node-exporter
+    - promtail

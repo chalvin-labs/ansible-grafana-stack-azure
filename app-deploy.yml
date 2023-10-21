@@ -1,5 +1,5 @@
 ---
-- name: deploy app to server
+- name: Deploy app to servers
   hosts: apps
   become: yes
   roles:

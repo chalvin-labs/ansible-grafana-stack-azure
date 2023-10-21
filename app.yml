@@ -1,8 +1,7 @@
 ---
-- name: provision for app server
+- name: Configuration for app server
   hosts: apps
   become: yes
   roles:
     - go
     - docker
-    - node-exporter

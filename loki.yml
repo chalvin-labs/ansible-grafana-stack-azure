@@ -1,0 +1,6 @@
+---
+- name: Configuration for loki server
+  hosts: loki
+  become: yes
+  roles:
+    - loki
